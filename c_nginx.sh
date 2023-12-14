@@ -10,11 +10,11 @@ while getopts "t:" opt; do
 done
 
 # 安装目录
-INSTALL_DIR="/root/nginx-checker"
+INSTALL_DIR="/root/c_n"
 mkdir -p $INSTALL_DIR
 
 # 创建检查脚本
-cat <<EOF > $INSTALL_DIR/check-nginx.sh
+cat <<EOF > $INSTALL_DIR/c_n.sh
 #!/bin/bash
 LOG_FILE="$INSTALL_DIR/error.log"
 
@@ -41,16 +41,16 @@ while true; do
 done
 EOF
 
-chmod +x $INSTALL_DIR/check-nginx.sh
+chmod +x $INSTALL_DIR/c_n.sh
 
 # 创建 systemd 服务文件
-SERVICE_FILE="/etc/systemd/system/nginx-checker.service"
+SERVICE_FILE="/etc/systemd/system/c_n.service"
 cat <<EOF > $SERVICE_FILE
 [Unit]
 Description=Nginx Checker Service
 
 [Service]
-ExecStart=$INSTALL_DIR/check-nginx.sh
+ExecStart=$INSTALL_DIR/c_n.sh
 Restart=always
 
 [Install]
@@ -61,10 +61,10 @@ EOF
 systemctl daemon-reload
 
 # 检查服务是否存在，并替换旧服务
-if systemctl --quiet is-active nginx-checker; then
-    systemctl stop nginx-checker
+if systemctl --quiet is-active c_n; then
+    systemctl stop c_n
 fi
-systemctl enable nginx-checker
-systemctl start nginx-checker
+systemctl enable c_n
+systemctl start c_n
 
 echo "Nginx check service installed and started."
