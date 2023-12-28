@@ -1403,7 +1403,7 @@ done
 verify_os_name "$@"
 
 # 检查必须的参数
-verify_os_args
+# verify_os_args
 
 # 不支持容器虚拟化
 assert_not_in_container
