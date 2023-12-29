@@ -654,8 +654,7 @@ verify_os_args() {
         # --image-name 肯定大于等于3个单词
         if [ "$(echo "$image_name" | wc -w)" -lt 3 ] ||
             [[ "$(to_lower <<<"$image_name")" != windows* ]]; then
-            #error_and_exit "--image-name wrong."
-            echo "Warning: --image-name may be wrong."
+            error_and_exit "--image-name wrong."
         fi
         ;;
     esac
@@ -1403,7 +1402,7 @@ done
 verify_os_name "$@"
 
 # 检查必须的参数
-# verify_os_args
+verify_os_args
 
 # 不支持容器虚拟化
 assert_not_in_container
