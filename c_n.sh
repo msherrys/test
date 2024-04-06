@@ -18,19 +18,25 @@ cat <<EOF > $INSTALL_DIR/c_n.sh
 #!/bin/bash
 LOG_FILE="$INSTALL_DIR/error.log"
 
+# 定义一个函数来获取当前时间戳
+current_timestamp() {
+    echo \$(date +"%Y-%m-%d %H:%M:%S")
+}
+
 function check_nginx {
     if ! command -v nginx &> /dev/null; then
-        echo "Nginx is not installed" >> \$LOG_FILE
+        echo "\$(current_timestamp) - Nginx is not installed" >> \$LOG_FILE
         return 1
     fi
 
+    # 检查nginx状态和日志
     if systemctl is-active --quiet nginx; then
-        echo "Nginx is running"
+        echo "\$(current_timestamp) - Nginx is running"        
     else
-        echo "Nginx is not running. Starting Nginx..."
+        echo "\$(current_timestamp) - Nginx is not running. Starting Nginx..."
         systemctl start nginx
         if [ \$? -ne 0 ]; then
-            echo "Failed to start Nginx" >> \$LOG_FILE
+            echo "\$(current_timestamp) - Failed to start Nginx" >> \$LOG_FILE
         fi
     fi
 }
