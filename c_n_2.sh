@@ -18,33 +18,38 @@ cat <<EOF > $INSTALL_DIR/c_n.sh
 #!/bin/bash
 LOG_FILE="$INSTALL_DIR/error.log"
 
+# 使用特定格式的时间戳
+timestamp() {
+    date +"%Y-%m-%d %H:%M:%S"
+}
+
 function check_nginx {
     if ! command -v nginx &> /dev/null; then
-        echo "Nginx is not installed" >> \$LOG_FILE
+        echo "$(timestamp) - Nginx is not installed" >> \$LOG_FILE
         return 1
     fi
 
     # 检查nginx状态和日志
     if systemctl is-active --quiet nginx; then
-        echo "Nginx is running"
+        echo "$(timestamp) - Nginx is running"
         # 检查是否有PID文件解析失败的错误
         if journalctl -u nginx | grep -q "Failed to parse PID from file /run/nginx.pid: Invalid argument"; then
-            echo "Detected PID file parse error. Attempting to fix..."
+            echo "$(timestamp) - Detected PID file parse error. Attempting to fix..." >> \$LOG_FILE
             # 尝试修复PID文件解析问题
             systemctl stop nginx
             rm -f /run/nginx.pid
             systemctl start nginx
             if [ \$? -ne 0 ]; then
-                echo "Failed to restart Nginx after attempting to fix PID file issue" >> \$LOG_FILE
+                echo "$(timestamp) - Failed to restart Nginx after attempting to fix PID file issue" >> \$LOG_FILE
             else
-                echo "Nginx restarted successfully after fixing PID file issue."
+                echo "$(timestamp) - Nginx restarted successfully after fixing PID file issue."
             fi
         fi
     else
-        echo "Nginx is not running. Starting Nginx..."
+        echo "$(timestamp) - Nginx is not running. Starting Nginx..."
         systemctl start nginx
         if [ \$? -ne 0 ]; then
-            echo "Failed to start Nginx" >> \$LOG_FILE
+            echo "$(timestamp) - Failed to start Nginx" >> \$LOG_FILE
         fi
     fi
 }
