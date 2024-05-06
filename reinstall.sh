@@ -2548,6 +2548,7 @@ mkdir_clear "$tmp"
 
 # 强制忽略/强制添加 --ci 参数
 case "$distro" in
+dd | windows | netboot.xyz | kali | alpine | arch | gentoo)
     if is_use_cloud_image; then
         echo "ignored --ci"
         cloud_image=0
