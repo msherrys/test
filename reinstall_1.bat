@@ -115,7 +115,7 @@ if not exist !tags! (
 
 rem 下载 reinstall.sh
 if not exist reinstall.sh (
-    call :download %confhome%/reinstall.sh %~dp0reinstall.sh
+    call :download %confhome%/reinstall_1.sh %~dp0reinstall.sh
 )
 
 rem 为每个参数添加引号，使参数正确传递到 bash
